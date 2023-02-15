@@ -1,0 +1,101 @@
+---
+title: "Untitled"
+author: "Lantz Murray"
+date: "2/14/2023"
+output: html_document
+runtime: shiny
+---
+
+Lets take a look at NBA all time season scorers. LeBron just came the all time leading scorer so let's look at the data. We have already set our working diretory to be where our data is. Now, lets install and import the Data Explorer package.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+#install Data Explorer Library
+#install.packages("DataExplorer")
+
+#Import Data Explorer Library
+library(DataExplorer)
+```
+
+##### 
+
+########### 
+
+Now that our library is imported. We need to load in our data that we pulled from NBA.com .
+
+```{r}
+#Import Data 
+df<- readxl::read_xlsx('NBA Top100 Scorers.xlsx')
+
+```
+
+Lets see how many rows and columns that we have in our spreadsheet
+
+```{r}
+#Description of Data
+introduce(df)
+```
+
+Now we can compare our rows and columns and place the comparison on a chart.
+
+```{r}
+#Plot of basic description for scoring data
+plot_intro(df)
+```
+
+We have no missing data which is great! NBA.com did a good job with ensuring all the data was here. Another look here shows that we have nothing missing at all. If we did have some missing values, this would show us where.
+
+```{r}
+#Check to see if there are missing values 
+plot_missing(df)
+
+```
+
+Okay, so if everything is there lets looat a histogram of all the continious variables.
+
+```{r}
+#histogram for all continious variables
+plot_histogram(df)
+```
+
+Looking above , quickly one correlcation that I can see is Games Played, Minutes, Points, Field Goal Attempts , and Field Goals Made. That makes sense, you have to play alot to score alot and take alot of shots to score alot. Free throw attempts and Free throws made also would be related to GP and MIN. Games played, and minutes seem to increase most things except percentages such as three point percent or field goal percentage. Lets look at the same data but as a plot density distrubution instead of a histogram.
+
+```{r}
+#Estimated density distrubution for all continous variables
+plot_density(df)
+```
+
+Lets look at a quantile plot this time.
+
+```{r}
+#Quantile plot of all continous varibles 
+plot_qq(df)
+```
+
+Looking at these plots we can see the top 3 people in PTS stand out well above the line. We also see a top stand out for field goals made. There's a top 3 for points.There's a stand out for assists and 3 standouts for EFG.
+
+Looking at those items we have Robert Parish, Kareem Adul Jabar, and Vince Carter for most games played. Already we have our #2 all time scorer in the midst. When we look at points we have Kareem again, at #2, Lebron at #1 and Karl Malone at #3. Looking at minutes we have again, Kareem this time 1st, Malone at 2nd and Lebron 3rd. For Field Goals made and attempts we have these same 3 again in the order or Kareem,Bron, Malone.
+
+Even correlation, looking at Freethrows made we ahve Karl Malone,Moses Malone, and Kobe Bryant. If we look at Free Throw attempts we have, Karl Malone, Wilt Chamberlain , and Shaquille O'Neal. So far our top ten scorers continously appear in the top three for all of these mentioned fields but if we look at something like Assists or Steals we'll see something different. For assists we have a top 3 of John Stockon, Jason Kidd, and Chris Paul. #4 for assists......LeBron James.
+
+If we look at steals we have John Stockton, Jason Kidd, and Michael Jordan. Jordan is our #5 scorer but Stockton and Kidd as well as Chris Paul are all Point Guards so now we can have a second theory that point guards have more assists and steals. We also see that going by normal basketball positions we don't have a point guard in the scoring top 10. ( You can't count Bron, Kobe or MJ acting as a point.) In fact, outside of Kobe and MJ the other 8 are a Forward or Center
+
+If we want a big man correlation we can look at rebounds and get a top 3 of Wilt, Kareem, and Elvin Hayes. Looking at blocks we see Hakeem Olajuwon, Kareem(again!!!) , and Tim Duncan. From this we can see clearly These are all Centers or Power Forwards. Both Kareem and Wilt are Centers.
+
+If we look at a scatter plot we can see the correlation to points and if its strong or now
+
+```{r}
+plot_scatterplot(split_columns(df)$continuous,by = 'PTS')
+
+```
+
+Lets create a new value, points per game and see how the averages look. Lets see if its similar to our top 10 list.
+
+```{r}
+df$AVGPPG <- df$PTS/df$GP
+plot_scatterplot(split_columns(df)$continuous,by = 'AVGPPG')
+
+```
+
+After sorting this I can now see a big what if....What if Jordan never left the NBA..? He has 30.1 PPG on average . Kareem is 16th for points per game AVG but he sits at 2nd all time season scorer. Jordan has the highest PPGAVG. LeBron is 6th with 27.22, while Kevin Durant is 5th with 27.28. Had Jordan not left, he may have been the all time scorer.
